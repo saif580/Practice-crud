@@ -3,6 +3,7 @@ const app =express();
 const path=require('path')
 const bodyParser=require('body-parser')
 const methodOverride=require('method-override')
+const { v4: uuid } = require('uuid');
 
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -12,25 +13,25 @@ app.set('view engine','ejs')
 
 let friends=[
     {
-        id:1,
+        id:uuid(),
         name:"saif",
         age:24,
         location:"Banglore"
     },
     {
-        id:2,
+        id:uuid(),
         name:"irfan",
         age:24,
         location:"Lucknow"
     },
     {
-        id:3,
+        id:uuid(),
         name:"anand",
         age:24,
         location:"Sitapur"
     },
     {
-        id:4,
+        id:uuid(),
         name:"vikas",
         age:24,
         location:"Gorakhpur"
@@ -53,26 +54,26 @@ app.get('/friends/new',(req,res)=>{
 })
 app.post('/friends',(req,res)=>{
     const {name,age}=req.body;
-    friends.push({id:5,name,age});
+    friends.push({id:uuid(),name,age});
     res.redirect('/friends')
 })
 
 
 app.get('/friends/:id',(req,res)=>{
     const id=req.params.id;
-    const friendsInfo=friends.find(f=>f.id===parseInt(id));
+    const friendsInfo=friends.find(f=>f.id==id);
     res.render('show.ejs',{friendsInfo})
 })
 
 app.get('/friends/:id/edit',(req,res)=>{
     const {id}=req.params;
-    const friendsInfo=friends.find(f=>f.id===parseInt(id));
+    const friendsInfo=friends.find(f=>f.id==id);
     res.render('edit.ejs',{friendsInfo})
 })
 app.patch('/friends/:id',(req,res)=>{
     const editFriend=req.body;
     const {id}=req.params;
-    let friendsInfo=friends.find(f=>f.id===parseInt(id));
+    let friendsInfo=friends.find(f=>f.id==id);
     friendsInfo.name=editFriend.name;
     friendsInfo.age=editFriend.age;
     friendsInfo.location=editFriend.location;
